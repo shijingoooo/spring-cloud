@@ -1,0 +1,35 @@
+server:
+  port: 3344
+spring:
+  application:
+    name: cloud-config-center   # 注册进Eureka服务器的微服务名
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/shijingoooo/spring-cloud-config-repo.git   #GitHub上面的git仓库名字
+          search-paths:
+            - spring-cloud-config-repo
+      label: master   # 读取分支
+# rabbitmq 相关配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    register-with-eureka: true  #表示是否将自己注册进EurekaServer默认true
+    fetch-registry: true  # 是否从EurekaServer抓取已有的注册信息，默认为true。单节点无所谓，集群必须配置true才能配合ribbon使用负载均衡
+    service-url:
+      #集群版
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+
+# rabbitmq祥光配置，暴露bus刷新配置的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'
+# http://localhost:3344/actuator/bus-refresh/cloud-config-client:3355
